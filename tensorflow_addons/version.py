@@ -20,7 +20,7 @@ from __future__ import print_function
 # We follow Semantic Versioning (https://semver.org/)
 _MAJOR_VERSION = '0'
 _MINOR_VERSION = '1'
-_PATCH_VERSION = '0'
+_PATCH_VERSION = '1'
 
 # When building releases, we can update this value on the release branch to
 # reflect the current release candidate ('rc0', 'rc1') or, finally, the official
@@ -36,4 +36,4 @@ __version__ = '.'.join([
     _PATCH_VERSION,
 ])
 if _VERSION_SUFFIX:
-    __version__ = '{}-{}'.format(__version__, _VERSION_SUFFIX)
+    __version__ = '{}.{}'.format(__version__, _VERSION_SUFFIX)
