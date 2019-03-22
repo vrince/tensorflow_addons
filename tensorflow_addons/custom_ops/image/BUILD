@@ -3,6 +3,21 @@ licenses(["notice"])  # Apache 2.0
 package(default_visibility = ["//visibility:public"])
 
 cc_binary(
+    name = "python/_distance_ops.so",
+    srcs = glob(["cc/kernels/distance_transform/**",
+        "cc/kernels/distance_op.cpp",
+        "cc/kernels/distance_op.h",
+        "cc/ops/distance_ops.cc",
+    ]),
+    linkshared = 1,
+    deps = [
+        "@local_config_tf//:libtensorflow_framework",
+        "@local_config_tf//:tf_header_lib",
+    ],
+    copts = ["-pthread", "-std=c++11", "-D_GLIBCXX_USE_CXX11_ABI=0"]
+)
+
+cc_binary(
     name = "python/_threshold_ops.so",
     srcs = [
         "cc/kernels/image_threshold_op.cc",
@@ -57,17 +72,32 @@ py_library(
     srcs = ([
         "__init__.py",
         "python/__init__.py",
+        "python/distance.py", 
         "python/threshold.py",
         "python/distort_image_ops.py",
         "python/transform.py",
     ]),
     data = [
+        ":python/_distance_ops.so",
         ":python/_threshold_ops.so",
         ":python/_distort_image_ops.so",
         ":python/_image_ops.so",
         "//tensorflow_addons/utils:utils_py",
     ],
     srcs_version = "PY2AND3",
+)
+
+py_test(
+    name = "distance_ops_test",
+    size = "small",
+    srcs = [
+        "python/distance_ops_test.py",
+    ],
+    main = "python/distance_ops_test.py",
+    deps = [
+        ":images_ops_py",
+    ],
+    srcs_version = "PY2AND3"
 )
 
 py_test(

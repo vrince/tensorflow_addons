@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 
 from tensorflow.python.ops import gradient_checker
-from tensorflow_addons.custom_ops.image.python import threshold as threshold_ops
+from tensorflow_addons.custom_ops.image.python import distance as distance_ops
 from tensorflow_addons.utils.python import test_utils
 
 _DTYPES = set([
@@ -15,18 +15,13 @@ _DTYPES = set([
 ])
 
 
-class ThresholdOpsTest(tf.test.TestCase):
+class DistanceOpsTest(tf.test.TestCase):
     @test_utils.run_in_graph_and_eager_modes
-    def test_simple_threshold(self):
+    def test_simple_distance(self):
         for dtype in _DTYPES:
-            image = tf.constant(
-                [[1, 1, 1, 0], [1, 0, 0, 0], [1, 1, 1, 0], [0, 0, 0, 0]],
-                dtype=dtype)
-
-            print("test_simple_threshold")
-            output = threshold_ops.image_threshold(
-                [[[1.2, 2.5], [0.2, 4.9]]], [1, 2, 3])
-            self.assertAllEqual([[[1, 2], [0, 3]]], output)
+            distance = distance_ops.distance_transform(
+                [[[1.2, 2.5], [0.2, 4.9]]], 1)
+            self.assertTrue(True)
 
 
 if __name__ == "__main__":
