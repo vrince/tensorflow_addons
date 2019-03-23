@@ -17,7 +17,9 @@ namespace dt
 {
 
 template <typename Scalar, dope::SizeType DIM>
-inline void DistanceTransform::distanceTransformL2(const dope::DopeVector<Scalar, DIM> &f, dope::DopeVector<Scalar, DIM> &D, const bool squared, const std::size_t nThreads)
+inline void DistanceTransform::distanceTransformL2(const dope::DopeVector<Scalar, DIM> &f,
+												   dope::DopeVector<Scalar, DIM> &D,
+												   const bool squared, const std::size_t nThreads)
 {
 	dope::Index<DIM> fSize, DSize;
 	fSize = f.allSizes();
@@ -67,7 +69,8 @@ inline void DistanceTransform::distanceTransformL2(const dope::DopeVector<Scalar
 				tmpWindowsD.at(i) = tmpD_rotated.window(winStart, winSize);
 				winStart[0] = 0;
 				winSize[0] = tmpF_rotated.sizeAt(0);
-				threads.at(i) = std::thread(static_cast<void (*)(const dope::DopeVector<Scalar, DIM> &, dope::DopeVector<Scalar, DIM> &)>(&distanceL2Helper), std::cref(tmpWindowsF.at(i)), std::ref(tmpWindowsD.at(i)));
+				threads.at(i) = std::thread(static_cast<void (*)(const dope::DopeVector<Scalar, DIM> &, dope::DopeVector<Scalar, DIM> &)>(&distanceL2Helper),
+											std::cref(tmpWindowsF.at(i)), std::ref(tmpWindowsD.at(i)));
 			}
 			for (std::size_t i = 0; i < nWindows; ++i)
 				threads.at(i).join();
@@ -90,7 +93,10 @@ inline void DistanceTransform::distanceTransformL2(const dope::DopeVector<Scalar
 }
 
 template <typename Scalar>
-inline void DistanceTransform::distanceTransformL2(const dope::DopeVector<Scalar, 1> &f, dope::DopeVector<Scalar, 1> &D, const bool squared, const std::size_t)
+inline void DistanceTransform::distanceTransformL2(const dope::DopeVector<Scalar, 1> &f,
+												   dope::DopeVector<Scalar, 1> &D,
+												   const bool squared,
+												   const std::size_t)
 {
 	dope::Index1 fSize, DSize;
 	fSize = f.allSizes();
@@ -105,7 +111,11 @@ inline void DistanceTransform::distanceTransformL2(const dope::DopeVector<Scalar
 }
 
 template <typename Scalar, dope::SizeType DIM>
-inline void DistanceTransform::distanceTransformL2(const dope::DopeVector<Scalar, DIM> &f, dope::DopeVector<Scalar, DIM> &D, dope::DopeVector<dope::SizeType, DIM> &I, const bool squared, const std::size_t nThreads)
+inline void DistanceTransform::distanceTransformL2(const dope::DopeVector<Scalar, DIM> &f,
+												   dope::DopeVector<Scalar, DIM> &D,
+												   dope::DopeVector<dope::SizeType, DIM> &I,
+												   const bool squared,
+												   const std::size_t nThreads)
 {
 	dope::Index<DIM> fSize, DSize, ISize;
 	fSize = f.allSizes();
@@ -166,7 +176,9 @@ inline void DistanceTransform::distanceTransformL2(const dope::DopeVector<Scalar
 				tmpWindowsIPost.at(i) = Ipost_rotated.window(winStart, winSize);
 				winStart[0] = 0;
 				winSize[0] = tmpF_rotated.sizeAt(0);
-				threads.at(i) = std::thread(static_cast<void (*)(const dope::DopeVector<Scalar, DIM> &, dope::DopeVector<Scalar, DIM> &, const dope::DopeVector<dope::SizeType, DIM> &, dope::DopeVector<dope::SizeType, DIM> &)>(&distanceL2Helper), std::cref(tmpWindowsF.at(i)), std::ref(tmpWindowsD.at(i)), std::cref(tmpWindowsIPre.at(i)), std::ref(tmpWindowsIPost.at(i)));
+				threads.at(i) = std::thread(static_cast<void (*)(const dope::DopeVector<Scalar, DIM> &, dope::DopeVector<Scalar, DIM> &,
+																 const dope::DopeVector<dope::SizeType, DIM> &, dope::DopeVector<dope::SizeType, DIM> &)>(&distanceL2Helper),
+											std::cref(tmpWindowsF.at(i)), std::ref(tmpWindowsD.at(i)), std::cref(tmpWindowsIPre.at(i)), std::ref(tmpWindowsIPost.at(i)));
 			}
 			for (std::size_t i = 0; i < nWindows; ++i)
 				threads.at(i).join();
@@ -194,7 +206,11 @@ inline void DistanceTransform::distanceTransformL2(const dope::DopeVector<Scalar
 }
 
 template <typename Scalar>
-inline void DistanceTransform::distanceTransformL2(const dope::DopeVector<Scalar, 1> &f, dope::DopeVector<Scalar, 1> &D, dope::DopeVector<dope::SizeType, 1> &I, const bool squared, const std::size_t)
+inline void DistanceTransform::distanceTransformL2(const dope::DopeVector<Scalar, 1> &f,
+												   dope::DopeVector<Scalar, 1> &D,
+												   dope::DopeVector<dope::SizeType, 1> &I,
+												   const bool squared,
+												   const std::size_t)
 {
 	dope::Index1 fSize, DSize, ISize;
 	fSize = f.allSizes();
@@ -300,7 +316,10 @@ inline void DistanceTransform::distanceL2(const dope::DopeVector<Scalar, 1> &f, 
 }
 
 template <typename Scalar, dope::SizeType DIM>
-inline void DistanceTransform::distanceL2Helper(const dope::DopeVector<Scalar, DIM> &f, dope::DopeVector<Scalar, DIM> &D, const dope::DopeVector<dope::SizeType, DIM> &Ipre, dope::DopeVector<dope::SizeType, DIM> &Ipost)
+inline void DistanceTransform::distanceL2Helper(const dope::DopeVector<Scalar, DIM> &f,
+												dope::DopeVector<Scalar, DIM> &D,
+												const dope::DopeVector<dope::SizeType, DIM> &Ipre,
+												dope::DopeVector<dope::SizeType, DIM> &Ipost)
 {
 	dope::DopeVector<Scalar, DIM - 1> f_dq;
 	dope::DopeVector<Scalar, DIM - 1> D_dq;
@@ -318,7 +337,10 @@ inline void DistanceTransform::distanceL2Helper(const dope::DopeVector<Scalar, D
 }
 
 template <typename Scalar, dope::SizeType DIM>
-inline void DistanceTransform::distanceL2(const dope::DopeVector<Scalar, DIM> &f, dope::DopeVector<Scalar, DIM> &D, const dope::DopeVector<dope::SizeType, DIM> &Ipre, dope::DopeVector<dope::SizeType, DIM> &Ipost)
+inline void DistanceTransform::distanceL2(const dope::DopeVector<Scalar, DIM> &f,
+										  dope::DopeVector<Scalar, DIM> &D,
+										  const dope::DopeVector<dope::SizeType, DIM> &Ipre,
+										  dope::DopeVector<dope::SizeType, DIM> &Ipost)
 {
 	dope::DopeVector<Scalar, DIM - 1> f_q, D_q;
 	dope::DopeVector<dope::SizeType, DIM - 1> Ipre_q, Ipost_q;
@@ -334,7 +356,10 @@ inline void DistanceTransform::distanceL2(const dope::DopeVector<Scalar, DIM> &f
 }
 
 template <typename Scalar>
-inline void DistanceTransform::distanceL2(const dope::DopeVector<Scalar, 1> &f, dope::DopeVector<Scalar, 1> &D, const dope::DopeVector<dope::SizeType, 1> &Ipre, dope::DopeVector<dope::SizeType, 1> &Ipost)
+inline void DistanceTransform::distanceL2(const dope::DopeVector<Scalar, 1> &f,
+										  dope::DopeVector<Scalar, 1> &D,
+										  const dope::DopeVector<dope::SizeType, 1> &Ipre,
+										  dope::DopeVector<dope::SizeType, 1> &Ipost)
 {
 	if (f.sizeAt(0) == static_cast<dope::SizeType>(0) || f.sizeAt(0) > D.sizeAt(0))
 		return;

@@ -35,14 +35,30 @@ distance: a `float` `Tensor` same size as `input`.
 } // namespace
 
 // V2 op supports output_shape.
-REGISTER_OP("DistanceTransform")
+REGISTER_OP("DistanceTransform3d")
     .Input("input: dtype")
     .Input("cutoff: dtype")
     .Attr("dtype: {uint8, int32, int64, float16, float32, float64}")
+    .Attr("threads: int = 1")
+    .Attr("squared: bool = false")
     .Output("distance: float32")
     .SetShapeFn([](::tensorflow::shape_inference::InferenceContext *c) {
         c->set_output(0, c->input(0));
         return Status::OK();
     })
     .Doc(DistanceTransformDoc);
+
+REGISTER_OP("DistanceTransform2d")
+    .Input("input: dtype")
+    .Input("cutoff: dtype")
+    .Attr("dtype: {uint8, int32, int64, float16, float32, float64}")
+    .Attr("threads: int = 1")
+    .Attr("squared: bool = false")
+    .Output("distance: float32")
+    .SetShapeFn([](::tensorflow::shape_inference::InferenceContext *c) {
+        c->set_output(0, c->input(0));
+        return Status::OK();
+    })
+    .Doc(DistanceTransformDoc);
+
 } // namespace tensorflow

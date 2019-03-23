@@ -52,6 +52,8 @@ class Grid : public DopeVector<T, Dimension>
 		 */
 	inline Grid() = default;
 
+	inline explicit Grid(T *array, const SizeType accumulatedOffset, const IndexD &size) : DopeVector<T, Dimension>(array, accumulatedOffset, size){};
+
 	/**
 		 *    @brief Initializer contructor.
 		 *    @param size               Sizes of the D-dimensional grid.

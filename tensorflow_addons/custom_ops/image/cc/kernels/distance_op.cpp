@@ -24,76 +24,71 @@ namespace tensorflow
 
 typedef Eigen::ThreadPoolDevice CPUDevice;
 
-template <typename Device, typename T>
+template <typename Device, typename T, int D>
 class DistanceTransform : public OpKernel
 {
   public:
     explicit DistanceTransform(OpKernelConstruction *ctx) : OpKernel(ctx)
     {
+        OP_REQUIRES_OK(ctx, ctx->GetAttr("threads", &threads_));
+        OP_REQUIRES(ctx, threads_ >= 0, errors::InvalidArgument("Need threads >= 0"));
+        OP_REQUIRES_OK(ctx, ctx->GetAttr("squared", &squared_));
     }
 
     void Compute(OpKernelContext *ctx) override
     {
         const Tensor &input_t = ctx->input(0);
+        OP_REQUIRES(ctx, input_t.shape().dims() == D,
+                    errors::InvalidArgument("input shape dimension must be ", D,
+                                            " get ", input_t.shape().dims()));
+
         const Tensor &cutoff_t = ctx->input(1);
-        OP_REQUIRES(ctx, cutoff_t.shape().dims() != 1 || cutoff_t.shape().dim_size(0) != 1,
+        OP_REQUIRES(ctx, cutoff_t.shape().dims() == 0,
                     errors::InvalidArgument("cutoff must a scalar"));
 
         Tensor *distance_t;
         OP_REQUIRES_OK(ctx, ctx->allocate_output(0, input_t.shape(), &distance_t));
 
-        //auto input = input_t.tensor<T>();
-        //auto thresholds = cutoff_t.tensor<T>();
-        //auto distance = distance_t->flat<float>();
+        auto cutoff = cutoff_t.flat<T>()(0);
+        auto input_flat = input_t.flat<T>();
+        auto distance_flat = distance_t->flat<float>();
+        for (int i = 0; i < input_flat.size(); i++)
+            distance_flat(i) = input_flat(i) <= cutoff ? 0 : std::numeric_limits<float>::max();
 
-        Index3 size3D = {64, 64, 64};
-        Grid<float, 3> f3D(size3D);
-        for (SizeType i = 0; i < size3D[0]; ++i)
-            for (SizeType j = 0; j < size3D[1]; ++j)
-                for (std::size_t k = 0; k < size3D[2]; ++k)
-                    f3D[i][j][k] = std::numeric_limits<float>::max();
-        f3D[10][10][10] = 0.0f;
-        f3D[41][41][41] = 0.0f;
+        Index<D> size;
+        for (int i = 0; i < distance_t->shape().dims(); i++)
+            size[i] = distance_t->dim_size(1);
 
-        std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-        dt::DistanceTransform::distanceTransformL2(f3D, f3D, false, 1);
-        std::cout << std::endl
-                  << size3D[0] << 'x' << size3D[1] << 'x' << size3D[2] << " distance function computed in: " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count() << " ms." << std::endl;
-
-        std::cout << "build volume" << std::endl;
-
-        std::fstream fs;
-        fs.open("./out.vtk", std::ios_base::out);
-        fs << "# vtk DataFile Version 3.0" << std::endl;
-        fs << "distance" << std::endl;
-        fs << "ASCII" << std::endl;
-        fs << "DATASET STRUCTURED_POINTS" << std::endl;
-        fs << "DIMENSIONS " << size3D[0] << " " << size3D[1] << " " << size3D[2] << std::endl;
-        fs << "ORIGIN 0 0 0" << std::endl;
-        fs << "SPACING 1 1 1" << std::endl;
-        fs << "POINT_DATA " << size3D.prod() << std::endl;
-        fs << "SCALARS distance float 1" << std::endl;
-        fs << "LOOKUP_TABLE default" << std::endl;
-        for (SizeType i = 0; i < size3D[0]; ++i)
-            for (SizeType j = 0; j < size3D[1]; ++j)
-                for (std::size_t k = 0; k < size3D[2]; ++k)
-                    fs << f3D[i][j][k] << std::endl;
-        fs.close();
+        Grid<float, D> f(static_cast<float *>(distance_flat.data()), 0, size);
+        dt::DistanceTransform::distanceTransformL2(f, f, squared_, threads_);
     }
+
+  private:
+    bool squared_;
+    int threads_;
 };
 
-#define REGISTER(TYPE)                                          \
-    REGISTER_KERNEL_BUILDER(Name("DistanceTransform")           \
-                                .Device(DEVICE_CPU)             \
-                                .TypeConstraint<TYPE>("dtype"), \
-                            DistanceTransform<CPUDevice, TYPE>)
+#define REGISTER_2D(TYPE)                                                                                 \
+    REGISTER_KERNEL_BUILDER(Name("DistanceTransform2d").Device(DEVICE_CPU).TypeConstraint<TYPE>("dtype"), \
+                            DistanceTransform<CPUDevice, TYPE, 2>)
 
-TF_CALL_uint8(REGISTER);
-TF_CALL_int32(REGISTER);
-TF_CALL_int64(REGISTER);
-TF_CALL_half(REGISTER);
-TF_CALL_float(REGISTER);
-TF_CALL_double(REGISTER);
+#define REGISTER_3D(TYPE)                                                                                 \
+    REGISTER_KERNEL_BUILDER(Name("DistanceTransform3d").Device(DEVICE_CPU).TypeConstraint<TYPE>("dtype"), \
+                            DistanceTransform<CPUDevice, TYPE, 3>)
+
+TF_CALL_uint8(REGISTER_2D);
+TF_CALL_int32(REGISTER_2D);
+TF_CALL_int64(REGISTER_2D);
+TF_CALL_half(REGISTER_2D);
+TF_CALL_float(REGISTER_2D);
+TF_CALL_double(REGISTER_2D);
+
+TF_CALL_uint8(REGISTER_3D);
+TF_CALL_int32(REGISTER_3D);
+TF_CALL_int64(REGISTER_3D);
+TF_CALL_half(REGISTER_3D);
+TF_CALL_float(REGISTER_3D);
+TF_CALL_double(REGISTER_3D);
 
 #undef REGISTER
 

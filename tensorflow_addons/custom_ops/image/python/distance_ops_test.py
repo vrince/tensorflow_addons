@@ -17,11 +17,52 @@ _DTYPES = set([
 
 class DistanceOpsTest(tf.test.TestCase):
     @test_utils.run_in_graph_and_eager_modes
-    def test_simple_distance(self):
-        for dtype in _DTYPES:
-            distance = distance_ops.distance_transform(
-                [[[1.2, 2.5], [0.2, 4.9]]], 1)
-            self.assertTrue(True)
+    def test_distance_3d(self):
+        distance = distance_ops.distance_transform_3d(
+            [[[1., 2., 2.],
+              [2., 2., 2.],
+              [2., 2., 2.]],
+             [[2., 2., 2.],
+              [2., 2., 2.],
+              [2., 2., 2.]],
+             [[2., 2., 2.],
+              [2., 2., 2.],
+              [2., 2., 2.]]],
+            1.5)
+        self.assertAllClose(distance, [[[0., 1., 2.],
+                                        [1., 1.4142135, 2.236068],
+                                        [2., 2.236068, 2.828427]],
+                                       [[1., 1.4142135, 2.236068],
+                                        [1.4142135, 1.7320508, 2.4494898],
+                                        [2.236068, 2.4494898, 3.]],
+                                       [[2., 2.236068, 2.828427],
+                                        [2.236068, 2.4494898, 3.],
+                                        [2.828427, 3., 3.4641016]]])
+
+    @test_utils.run_in_graph_and_eager_modes
+    def test_distance_2d(self):
+        distance = distance_ops.distance_transform_2d(
+            [
+                [1., 2., 2.],
+                [2., 2., 2.],
+                [2., 2., 2.]
+            ], 1.5)
+        self.assertAllClose(distance, [[0., 1., 2.],
+                                       [1., 1.4142135, 2.236068],
+                                       [2., 2.236068, 2.828427]])
+
+    @test_utils.run_in_graph_and_eager_modes
+    def test_squared_distance_2d(self):
+        distance = distance_ops.distance_transform_2d(
+            [
+                [1., 2., 2.],
+                [2., 2., 2.],
+                [2., 2., 2.]
+            ], 1.5,
+            squared=True)
+        self.assertAllClose(distance, [[0., 1., 4.],
+                                       [1., 2, 5],
+                                       [4., 5, 8]])
 
 
 if __name__ == "__main__":
