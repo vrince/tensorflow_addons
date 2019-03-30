@@ -13,5 +13,6 @@ sh_binary(
         "//tensorflow_addons/layers:layers_py",
         "//tensorflow_addons/losses:losses_py",
         "//tensorflow_addons/optimizers:optimizers_py",
+        "//tensorflow_addons/dataset:dataset_ops_py",
     ],
 )
