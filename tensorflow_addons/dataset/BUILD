@@ -4,13 +4,16 @@ package(default_visibility = ["//visibility:public"])
 
 cc_binary(
     name = "_dataset_ops.so",
-    srcs = ["cc/my_dataset.cpp"],
+    srcs = [
+        "cc/my_dataset.cpp"
+    ],
     linkshared = 1,
     deps = [
         "@local_config_tf//:libtensorflow_framework",
         "@local_config_tf//:tf_header_lib",
     ],
-    copts = ["-pthread", "-std=c++11", "-D_GLIBCXX_USE_CXX11_ABI=0"]
+    # see why -DNDEBUG https://github.com/tensorflow/tensorflow/issues/17316
+    copts = ["-pthread", "-std=c++11", "-D_GLIBCXX_USE_CXX11_ABI=0", "-DNDEBUG"]
 )
 
 py_library(

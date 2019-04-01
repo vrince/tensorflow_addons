@@ -10,7 +10,7 @@ using ::tensorflow::Status;
 class MyReaderDatasetOp : public tensorflow::data::DatasetOpKernel
 {
   public:
-    MyReaderDatasetOp(tensorflow::OpKernelConstruction *ctx)
+    explicit MyReaderDatasetOp(tensorflow::OpKernelConstruction *ctx)
         : DatasetOpKernel(ctx)
     {
         // Parse and validate any attrs that define the dataset using
@@ -69,12 +69,12 @@ class MyReaderDatasetOp : public tensorflow::data::DatasetOpKernel
         // instances of this dataset (and any iterators over it).
         Status AsGraphDefInternal(tensorflow::SerializationContext *ctx,
                                   DatasetGraphDefBuilder *b,
-                                  tensorflow::Node **node) const
+                                  tensorflow::Node **output) const
         {
             // Construct nodes to represent any of the input tensors from this
             // object's member variables using `b->AddScalar()` and `b->AddVector()`.
             std::vector<tensorflow::Node *> input_tensors;
-            TF_RETURN_IF_ERROR(b->AddDataset(this, input_tensors, node));
+            TF_RETURN_IF_ERROR(b->AddDataset(this, input_tensors, output));
             return Status::OK();
         }
 

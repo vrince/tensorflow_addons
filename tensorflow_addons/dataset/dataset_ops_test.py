@@ -13,9 +13,11 @@ from tensorflow_addons.dataset import dataset_ops
 class DatasetOpsTest(tf.test.TestCase):
     def test_dataset(self):
         dataset = dataset_ops.MyReaderDataset()
-        i = iter(dataset)
-        #next_element = next(i)
-        # print(next_element)
+        i = 0
+        for d in dataset:
+            self.assertAllEqual(d, tf.constant("MyReader!"))
+            i += 1
+        self.assertEquals(i, 10)
 
 
 if __name__ == "__main__":
