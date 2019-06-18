@@ -1,9 +1,14 @@
 # Addons - Activations
 
+## Maintainers
+| Submodule  | Maintainers  | Contact Info   |
+|:---------- |:------------- |:--------------|
+| sparsemax | @AndreasMadsen | amwwebdk+github@gmail.com |
+
 ## Contents
-| Layer  | Reference                                     |
-|:----------------------- |:-----------------------------|
-| Sparsemax | https://arxiv.org/abs/1602.02068           |
+| Submodule | Activation  | Reference                               |
+|:----------------------- |:-------------------|:---------------|
+| sparsemax | Sparsemax | https://arxiv.org/abs/1602.02068           |
 
 
 ## Contribution Guidelines
@@ -25,5 +30,4 @@ must:
  * Add a `py_test` to this sub-package's BUILD file.
 
 #### Documentation Requirements
- * Update the table of contents in the project's central README.
  * Update the table of contents in this sub-package's README.
