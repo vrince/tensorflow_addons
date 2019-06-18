@@ -5,9 +5,8 @@ from __future__ import print_function
 import numpy as np
 import tensorflow as tf
 
-from tensorflow.python.ops import gradient_checker
-from tensorflow_addons.custom_ops.image.python import distance as distance_ops
-from tensorflow_addons.utils.python import test_utils
+from tensorflow_addons.image import distance as distance_ops
+from tensorflow_addons.utils import test_utils
 
 _DTYPES = set([
     tf.dtypes.uint8, tf.dtypes.int32, tf.dtypes.int64, tf.dtypes.float16,

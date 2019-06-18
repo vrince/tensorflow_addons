@@ -5,7 +5,7 @@ package(default_visibility = ["//visibility:public"])
 load("@local_config_tf//:build_defs.bzl", "D_GLIBCXX_USE_CXX11_ABI")
 
 cc_binary(
-    name = "python/_distance_ops.so",
+    name = "_distance_ops.so",
     srcs = glob(["cc/kernels/distance_transform/**",
         "cc/kernels/distance_op.cpp",
         "cc/kernels/distance_op.h",
@@ -16,11 +16,15 @@ cc_binary(
         "@local_config_tf//:libtensorflow_framework",
         "@local_config_tf//:tf_header_lib",
     ],
-    copts = ["-pthread", "-std=c++11", "-D_GLIBCXX_USE_CXX11_ABI=0"]
+    copts = [
+        "-pthread",
+        "-std=c++11",
+        D_GLIBCXX_USE_CXX11_ABI,
+    ],
 )
 
 cc_binary(
-    name = "python/_threshold_ops.so",
+    name = "_threshold_ops.so",
     srcs = [
         "cc/kernels/image_threshold_op.cc",
         "cc/kernels/image_threshold_op.h",
@@ -31,7 +35,11 @@ cc_binary(
         "@local_config_tf//:libtensorflow_framework",
         "@local_config_tf//:tf_header_lib",
     ],
-    copts = ["-pthread", "-std=c++11", "-D_GLIBCXX_USE_CXX11_ABI=0"]
+    copts = [
+        "-pthread",
+        "-std=c++11",
+        D_GLIBCXX_USE_CXX11_ABI,
+    ],
 )
 
 cc_binary(
@@ -74,76 +82,3 @@ cc_binary(
     ],
 )
 
-py_library(
-    name = "images_ops_py",
-    srcs = ([
-        "__init__.py",
-        "python/__init__.py",
-        "python/distance.py", 
-        "python/threshold.py",
-        "python/distort_image_ops.py",
-        "python/transform.py",
-    ]),
-    data = [
-        ":python/_distance_ops.so",
-        ":python/_threshold_ops.so",
-        ":python/_distort_image_ops.so",
-        ":python/_image_ops.so",
-        "//tensorflow_addons/utils:utils_py",
-    ],
-    srcs_version = "PY2AND3",
-)
-
-py_test(
-    name = "distance_ops_test",
-    size = "small",
-    srcs = [
-        "python/distance_ops_test.py",
-    ],
-    main = "python/distance_ops_test.py",
-    deps = [
-        ":images_ops_py",
-    ],
-    srcs_version = "PY2AND3"
-)
-
-py_test(
-    name = "threshold_ops_test",
-    size = "medium",
-    srcs = [
-        "python/threshold_ops_test.py",
-    ],
-    main = "python/threshold_ops_test.py",
-    deps = [
-        ":images_ops_py",
-    ],
-    srcs_version = "PY2AND3"
-)
-
-
-py_test(
-    name = "distort_image_ops_test",
-    size = "small",
-    srcs = [
-        "python/distort_image_ops_test.py",
-    ],
-    main = "python/distort_image_ops_test.py",
-    deps = [
-        ":images_ops_py",
-    ],
-    srcs_version = "PY2AND3"
-)
-
-# TODO: use cuda_py_test later.
-py_test(
-    name = "transform_ops_test",
-    size = "medium",
-    srcs = [
-        "python/transform_test.py",
-    ],
-    main = "python/transform_test.py",
-    srcs_version = "PY2AND3",
-    deps = [
-        ":images_ops_py",
-    ],
-)

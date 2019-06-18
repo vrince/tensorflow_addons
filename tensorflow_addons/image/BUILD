@@ -6,6 +6,8 @@ py_library(
     name = "image",
     srcs = ([
         "__init__.py",
+        "distance.py", 
+        "threshold.py",
         "dense_image_warp.py",
         "distance_transform.py",
         "distort_image_ops.py",
@@ -13,11 +15,39 @@ py_library(
         "transform_ops.py",
     ]),
     data = [
+        "//tensorflow_addons/custom_ops/image:_distance_ops.so",
+        "//tensorflow_addons/custom_ops/image:_threshold_ops.so",
         "//tensorflow_addons/custom_ops/image:_distort_image_ops.so",
         "//tensorflow_addons/custom_ops/image:_image_ops.so",
         "//tensorflow_addons/utils",
     ],
     srcs_version = "PY2AND3",
+)
+
+py_test(
+    name = "distance_ops_test",
+    size = "small",
+    srcs = [
+        "distance_ops_test.py",
+    ],
+    main = "distance_ops_test.py",
+    deps = [
+        ":image",
+    ],
+    srcs_version = "PY2AND3"
+)
+
+py_test(
+    name = "threshold_ops_test",
+    size = "small",
+    srcs = [
+        "threshold_ops_test.py",
+    ],
+    main = "threshold_ops_test.py",
+    deps = [
+        ":image",
+    ],
+    srcs_version = "PY2AND3"
 )
 
 py_test(

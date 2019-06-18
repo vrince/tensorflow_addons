@@ -13,18 +13,18 @@ cc_binary(
         "@local_config_tf//:tf_header_lib",
     ],
     # see why -DNDEBUG https://github.com/tensorflow/tensorflow/issues/17316
-    copts = ["-pthread", "-std=c++11", "-D_GLIBCXX_USE_CXX11_ABI=0", "-DNDEBUG"]
+    copts = ["-pthread","-std=c++11", "-D_GLIBCXX_USE_CXX11_ABI=0", "-DNDEBUG"]
 )
 
 py_library(
-    name = "dataset_ops_py",
+    name = "dataset",
     srcs = ([
         "__init__.py",
         "dataset_ops.py",
     ]),
     data = [
         ":_dataset_ops.so",
-        "//tensorflow_addons/utils:utils_py",
+        "//tensorflow_addons/utils",
     ],
     srcs_version = "PY2AND3",
 )
@@ -37,7 +37,7 @@ py_test(
     ],
     main = "dataset_ops_test.py",
     deps = [
-        ":dataset_ops_py",
+        ":dataset",
     ],
     srcs_version = "PY2AND3"
 )
