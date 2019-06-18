@@ -1,4 +1,10 @@
 #!/bin/bash
+
+# source .env/bin/activate
+# pip install tensorflow-gpu==2.0.0-beta1
+# configure.sh
+# build.sh
+
 set -e
 rm ./artifacts/* || true
 pip uninstall -y tensorflow_addons
