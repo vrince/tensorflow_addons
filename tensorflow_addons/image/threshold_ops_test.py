@@ -5,7 +5,7 @@ from __future__ import print_function
 import numpy as np
 import tensorflow as tf
 
-from tensorflow_addons.image import threshold_ops
+from tensorflow_addons.image import threshold
 from tensorflow_addons.utils import test_utils
 
 _DTYPES = set([
@@ -18,7 +18,7 @@ class ThresholdOpsTest(tf.test.TestCase):
     @test_utils.run_in_graph_and_eager_modes
     def test_simple_threshold(self):
         for dtype in _DTYPES:
-            output = threshold_ops.image_threshold(
+            output = threshold.image_threshold(
                 [[[1.2, 2.5], [0.2, 4.9]]], [1, 2, 3])
             self.assertAllEqual([[[1, 2], [0, 3]]], output)
 
