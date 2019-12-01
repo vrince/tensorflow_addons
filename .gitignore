@@ -1,3 +1,9 @@
+# Ignore all hidden files
+.*
+
+# Include travis.yml
+\!.travis.yml
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -37,9 +43,7 @@ wheels/
 /bazel-*
 /artifacts
 
-<<<<<<< HEAD
-.*
-=======
 # Addons
 /docs/
->>>>>>> e17ab4a697b97723f2f54715bdb21d2f4d4d313f
+
+.*

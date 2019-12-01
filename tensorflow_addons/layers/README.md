@@ -3,18 +3,22 @@
 ## Maintainers
 | Submodule  |  Maintainers  | Contact Info   |
 |:---------- |:----------- |:------------- |
-| maxout |  |  |
+| gelu       | @AakashKumarNain | aakashnain@outlook.com |  
+| maxout | @fsx950223 | fsx950223@gmail.com |
 | normalizations | @smokrow | moritz.kroeger@tu-dortmund.de |
-| poincare |  |  |
+| opticalflow | @fsx950223 | fsx950223@gmail.com |
+| poincare | @rahulunair | rahulunair@gmail.com  |
 | sparsemax | @AndreasMadsen | amwwebdk+github@gmail.com |
 | wrappers | @seanpmorgan | seanmorgan@outlook.com |
 
 ## Components
 | Submodule  | Layer |  Reference  |
 |:---------- |:----------- |:------------- |
+| gelu   | GeLU   | https://arxiv.org/abs/1606.08415 | 
 | maxout | Maxout | https://arxiv.org/abs/1302.4389    |
 | normalizations | GroupNormalization | https://arxiv.org/abs/1803.08494 |
 | normalizations | InstanceNormalization | https://arxiv.org/abs/1607.08022 |
+| opticalflow | CorrelationCost | https://arxiv.org/abs/1504.06852   |
 | poincare | PoincareNormalize | https://arxiv.org/abs/1705.08039    |
 | sparsemax| Sparsemax | https://arxiv.org/abs/1602.02068 |
 | wrappers | WeightNormalization | https://arxiv.org/abs/1602.07868 |
@@ -24,8 +28,7 @@
 In order to conform with the current API standard, all layers
 must:
  * Inherit from either `keras.layers.Layer` or its subclasses.
- * [Register as a keras global object](https://github.com/tensorflow/addons/blob/master/tensorflow_addons/utils/python/keras_utils.py)
-  so it can be serialized properly.
+ * Register as a keras global object so it can be serialized properly: `@tf.keras.utils.register_keras_serializable(package='Addons')`
  * Add the addon to the `py_library` in this sub-package's BUILD file.
 
 #### Testing Requirements

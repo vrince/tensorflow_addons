@@ -13,15 +13,28 @@ py_library(
         "distort_image_ops.py",
         "filters.py",
         "transform_ops.py",
+        "translate_ops.py",
+        "utils.py",
+        "sparse_image_warp.py",
+        "interpolate_spline.py",
+        "connected_components.py",
+        "resampler_ops.py",
     ]),
     data = [
-        "//tensorflow_addons/custom_ops/image:_distance_ops.so",
-        "//tensorflow_addons/custom_ops/image:_threshold_ops.so",
+        ":sparse_image_warp_test_data",
         "//tensorflow_addons/custom_ops/image:_distort_image_ops.so",
         "//tensorflow_addons/custom_ops/image:_image_ops.so",
+        "//tensorflow_addons/custom_ops/image:_resampler_ops.so",
+        "//tensorflow_addons/custom_ops/image:_distance_ops.so",
+        "//tensorflow_addons/custom_ops/image:_threshold_ops.so",
         "//tensorflow_addons/utils",
     ],
     srcs_version = "PY2AND3",
+)
+
+filegroup(
+    name = "sparse_image_warp_test_data",
+    srcs = glob(["test_data/*.png"]),
 )
 
 py_test(
@@ -102,7 +115,6 @@ py_test(
     ],
 )
 
-# TODO: use cuda_test later.
 py_test(
     name = "transform_ops_test",
     size = "medium",
@@ -110,6 +122,84 @@ py_test(
         "transform_ops_test.py",
     ],
     main = "transform_ops_test.py",
+    srcs_version = "PY2AND3",
+    deps = [
+        ":image",
+    ],
+)
+
+py_test(
+    name = "translate_ops_test",
+    size = "medium",
+    srcs = [
+        "translate_ops_test.py",
+    ],
+    main = "translate_ops_test.py",
+    srcs_version = "PY2AND3",
+    deps = [
+        ":image",
+    ],
+)
+
+py_test(
+    name = "utils_test",
+    size = "small",
+    srcs = [
+        "utils_test.py",
+    ],
+    main = "utils_test.py",
+    srcs_version = "PY2AND3",
+    deps = [
+        ":image",
+    ],
+)
+
+py_test(
+    name = "sparse_image_warp_test",
+    size = "medium",
+    srcs = [
+        "sparse_image_warp_test.py",
+    ],
+    main = "sparse_image_warp_test.py",
+    srcs_version = "PY2AND3",
+    deps = [
+        ":image",
+    ],
+)
+
+py_test(
+    name = "interpolate_spline_test",
+    size = "medium",
+    srcs = [
+        "interpolate_spline_test.py",
+    ],
+    main = "interpolate_spline_test.py",
+    srcs_version = "PY2AND3",
+    deps = [
+        ":image",
+    ],
+)
+
+py_test(
+    name = "connected_components_test",
+    size = "medium",
+    srcs = [
+        "connected_components_test.py",
+    ],
+    main = "connected_components_test.py",
+    srcs_version = "PY2AND3",
+    deps = [
+        ":image",
+    ],
+)
+
+py_test(
+    name = "resampler_ops_test",
+    size = "medium",
+    srcs = [
+        "resampler_ops_test.py",
+    ],
+    main = "resampler_ops_test.py",
     srcs_version = "PY2AND3",
     deps = [
         ":image",

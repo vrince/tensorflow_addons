@@ -20,10 +20,9 @@ from __future__ import print_function
 
 import tensorflow as tf
 from tensorflow_addons.losses import metric_learning
-from tensorflow_addons.utils import keras_utils
 
 
-@keras_utils.register_keras_custom_object
+@tf.keras.utils.register_keras_serializable(package='Addons')
 @tf.function
 def lifted_struct_loss(labels, embeddings, margin=1.0):
     """Computes the lifted structured loss.
@@ -40,7 +39,6 @@ def lifted_struct_loss(labels, embeddings, margin=1.0):
     """
     # Reshape [batch_size] label tensor to a [batch_size, 1] label tensor.
     lshape = tf.shape(labels)
-    assert lshape.shape == 1
     labels = tf.reshape(labels, [lshape[0], 1])
 
     # Build pairwise squared distance matrix.
@@ -103,7 +101,7 @@ def lifted_struct_loss(labels, embeddings, margin=1.0):
     return lifted_loss
 
 
-@keras_utils.register_keras_custom_object
+@tf.keras.utils.register_keras_serializable(package='Addons')
 class LiftedStructLoss(tf.keras.losses.Loss):
     """Computes the lifted structured loss.
 

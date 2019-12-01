@@ -18,9 +18,21 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from tensorflow_addons.optimizers.conditional_gradient import ConditionalGradient
+from tensorflow_addons.optimizers.cyclical_learning_rate import (
+    CyclicalLearningRate)
+from tensorflow_addons.optimizers.cyclical_learning_rate import (
+    TriangularCyclicalLearningRate)
+from tensorflow_addons.optimizers.cyclical_learning_rate import (
+    Triangular2CyclicalLearningRate)
+from tensorflow_addons.optimizers.cyclical_learning_rate import (
+    ExponentialCyclicalLearningRate)
+from tensorflow_addons.optimizers.lamb import LAMB
 from tensorflow_addons.optimizers.lazy_adam import LazyAdam
+from tensorflow_addons.optimizers.lookahead import Lookahead
+from tensorflow_addons.optimizers.moving_average import MovingAverage
+from tensorflow_addons.optimizers.rectified_adam import RectifiedAdam
 from tensorflow_addons.optimizers.weight_decay_optimizers import AdamW
 from tensorflow_addons.optimizers.weight_decay_optimizers import SGDW
 from tensorflow_addons.optimizers.weight_decay_optimizers import (
     extend_with_decoupled_weight_decay)
-from tensorflow_addons.optimizers.moving_average import MovingAverage

@@ -6,6 +6,7 @@
 
 [![PyPI Status Badge](https://badge.fury.io/py/tensorflow-addons.svg)](https://pypi.org/project/tensorflow-addons/)
 [![Gitter chat](https://img.shields.io/badge/chat-on%20gitter-46bc99.svg)](https://gitter.im/tensorflow/sig-addons)
+[![Documentation](https://img.shields.io/badge/api-reference-blue.svg)](https://www.tensorflow.org/addons/api_docs/python/tfa)
 
 ### Official Builds
 
@@ -30,13 +31,14 @@ developments that cannot be integrated into core TensorFlow
 | Subpackage    | Maintainers  | Contact Info                        |
 |:----------------------- |:----------- |:----------------------------|
 | [tfa.activations](tensorflow_addons/activations/README.md) | SIG-Addons | @facaiy @seanpmorgan | 
+| [tfa.callbacks](tensorflow_addons/callbacks/README.md) | SIG-Addons | @squadrick |
 | [tfa.image](tensorflow_addons/image/README.md) | SIG-Addons | @windqaq @facaiy |
 | [tfa.layers](tensorflow_addons/layers/README.md) | SIG-Addons | @seanpmorgan @facaiy |
 | [tfa.losses](tensorflow_addons/losses/README.md) | SIG-Addons | @facaiy @windqaq   |
 | [tfa.metrics](tensorflow_addons/metrics/README.md) | SIG-Addons | @squadrick | 
 | [tfa.optimizers](tensorflow_addons/optimizers/README.md) | SIG-Addons | @facaiy @windqaq @squadrick |
 | [tfa.rnn](tensorflow_addons/rnn/README.md) | Google | @qlzh727 |
-| [tfa.seq2seq](tensorflow_addons/seq2seq/README.md) | Google | @qlzh727 |
+| [tfa.seq2seq](tensorflow_addons/seq2seq/README.md) | Google/SIG-Addons | @qlzh727 @guillaumekln |
 | [tfa.text](tensorflow_addons/text/README.md) |  SIG-Addons |  @seanpmorgan @facaiy |
 
 ## Installation
@@ -46,7 +48,6 @@ To install the latest version, run the following:
 pip install tensorflow-addons
 ```
  
-**Note:** You will also need [`tensorflow==2.0.0-beta1`](https://www.tensorflow.org/beta) installed.
 
 To use addons:
 
@@ -56,8 +57,8 @@ import tensorflow_addons as tfa
 ```
 
 #### Nightly Builds
-There are also nightly builds of TensorFlow Addons under the pip package 
-`tfa-nightly`, which is built against `tf-nightly-2.0-preview`. Nightly builds 
+There are also nightly builds of TensorFlow Addons under the pip package
+`tfa-nightly`, which is built against `tf-nightly`. Nightly builds
 include newer features, but may be less stable than the versioned releases.
 
 ```
@@ -72,6 +73,11 @@ https://bazel.build/) build system.
 git clone https://github.com/tensorflow/addons.git
 cd addons
 
+# If building GPU Ops (Requires CUDA 10.0 and CuDNN 7)
+export TF_NEED_CUDA=1
+export CUDA_HOME="/path/to/cuda10" (default: /usr/local/cuda)
+export CUDNN_INSTALL_PATH="/path/to/cudnn" (default: /usr/lib/x86_64-linux-gnu)
+
 # This script links project with TensorFlow dependency
 ./configure.sh
 
@@ -81,8 +87,8 @@ bazel-bin/build_pip_pkg artifacts
 pip install artifacts/tensorflow_addons-*.whl
 ```
 
-## Examples
-See [`examples/`](examples/)
+## Tutorials
+See [`docs/tutorials/`](docs/tutorials/)
 for end-to-end examples of various addons.
 
 ## Core Concepts
@@ -91,6 +97,11 @@ for end-to-end examples of various addons.
 User experience and project maintainability are core concepts in
 TF-Addons. In order to achieve these we require that our additions
 conform to established API patterns seen in core TensorFlow.
+
+#### GPU/CPU Custom-Ops
+A major benefit of TensorFlow Addons is that there are precompiled ops. Should 
+a CUDA 10 installation not be found then the op will automatically fall back to 
+a CPU implementation.
 
 #### Proxy Maintainership
 Addons has been designed to compartmentalize subpackages and submodules so 
